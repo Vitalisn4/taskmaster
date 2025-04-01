@@ -3,55 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Board</title>
-    <link rel="stylesheet" href="style.css">
+    <title>TaskMaster - Task Management App</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6b46c1">
+    <meta name="description" content="A drag-and-drop task management application built with HTML, CSS, and JavaScript">
+    <meta name="author" content="Ngam Vitalis">
 </head>
 <body>
-    <header>
-        <h1>Kanban Board</h1>
-    </header>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>TaskMaster</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="home">Home</a>
+                <a href="#" class="nav-link" data-page="tasks">My Tasks</a>
+                <a href="#" class="nav-link" data-page="progress">Progress</a>
+                <a href="#" class="nav-link" data-page="settings">Settings</a>
+                <a href="#" class="nav-link" data-page="contact">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <div class="theme-toggle-icon"></div>
+                </button>
+                <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <div class="menu-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    <main>
-        <section class="features-section">
-            <div class="feature-card hover-lift" style="cursor: pointer;">
-                <div class="feature-icon drag-icon"></div>
-                <h3>Drag & Drop</h3>
-                <p>Easily organize your tasks by dragging them between columns.</p>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="#" class="mobile-nav-link active" data-page="home">Home</a>
+        <a href="#" class="mobile-nav-link" data-page="tasks">My Tasks</a>
+        <a href="#" class="mobile-nav-link" data-page="progress">Progress</a>
+        <a href="#" class="mobile-nav-link" data-page="settings">Settings</a>
+        <a href="#" class="mobile-nav-link" data-page="contact">Contact</a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <div class="welcome-section">
+                <h2>Welcome to TaskMaster</h2>
+                <p>Organize your tasks efficiently with our drag-and-drop interface. Create tasks, track progress, and never miss a deadline again.</p>
+                <button id="get-started-btn" class="btn btn-primary hover-lift">Get Started</button>
             </div>
-            <div class="feature-card hover-lift" style="cursor: pointer;">
-                <div class="feature-icon progress-icon"></div>
-                <h3>Track Progress</h3>
-                <p>Monitor your task completion with visual progress indicators.</p>
-            </div>
-            <div class="feature-card hover-lift" style="cursor: pointer;">
-                <div class="feature-icon notification-icon"></div>
-                <h3>Deadline Alerts</h3>
-                <p>Never miss a deadline with our built-in notification system.</p>
+            <div class="features-section">
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon drag-icon"></div>
+                    <h3>Drag & Drop</h3>
+                    <p>Easily organize your tasks by dragging them between columns.</p>
+                </div>
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon progress-icon"></div>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your task completion with visual progress indicators.</p>
+                </div>
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon notification-icon"></div>
+                    <h3>Deadline Alerts</h3>
+                    <p>Never miss a deadline with our built-in notification system.</p>
+                </div>
             </div>
         </section>
 
-        <section class="board">
-            <div class="column" id="todo">
-                <h2>To Do</h2>
-                <div class="task" draggable="true">Task 1: Plan the project</div>
-                <div class="task" draggable="true">Task 2: Design the layout</div>
+        <!-- Tasks Page -->
+        <section id="tasks-page" class="page">
+            <div class="page-header">
+                <h2>My Tasks</h2>
+                <div class="task-actions">
+                    <div class="search-container">
+                        <input type="text" id="task-search" placeholder="Search tasks...">
+                        <div class="search-icon"></div>
+                    </div>
+                    <div class="filter-container">
+                        <select id="priority-filter">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <select id="date-filter">
+                            <option value="all">All Dates</option>
+                            <option value="today">Due Today</option>
+                            <option value="week">Due This Week</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <button id="add-task-btn" class="btn btn-primary hover-lift">
+                        <span class="plus-icon"></span>
+                        Add Task
+                    </button>
+                </div>
             </div>
-            <div class="column" id="inProgress">
-                <h2>In Progress</h2>
-                <div class="task" draggable="true">Task 3: Develop core features</div>
+
+            <div class="task-board">
+                <div class="task-column" id="todo-column" data-column="todo">
+                    <div class="column-header">
+                        <h3>To Do</h3>
+                        <span class="task-count" id="todo-count">0</span>
+                    </div>
+                    <div class="task-list" id="todo-tasks"></div>
+                </div>
+                <div class="task-column" id="progress-column" data-column="inProgress">
+                    <div class="column-header">
+                        <h3>In Progress</h3>
+                        <span class="task-count" id="progress-count">0</span>
+                    </div>
+                    <div class="task-list" id="progress-tasks"></div>
+                </div>
+                <div class="task-column" id="completed-column" data-column="completed">
+                    <div class="column-header">
+                        <h3>Completed</h3>
+                        <span class="task-count" id="completed-count">0</span>
+                    </div>
+                    <div class="task-list" id="completed-tasks"></div>
+                </div>
             </div>
-            <div class="column" id="completed">
-                <h2>Completed</h2>
-                <div class="task" draggable="true">Task 4: Testing</div>
+
+            <div id="undo-container" class="undo-container hidden">
+                <p>Action completed</p>
+                <button id="undo-btn" class="btn btn-text">Undo</button>
+            </div>
+        </section>
+
+        <!-- Progress Page -->
+        <section id="progress-page" class="page">
+            <div class="page-header">
+                <h2>Progress Overview</h2>
+            </div>
+            <div class="progress-stats">
+                <div class="stat-card hover-lift">
+                    <h3>Tasks Completed</h3>
+                    <div class="stat-value" id="completed-tasks-count">0</div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <h3>Tasks In Progress</h3>
+                    <div class="stat-value" id="in-progress-tasks-count">0</div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <h3>Tasks To Do</h3>
+                    <div class="stat-value" id="todo-tasks-count">0</div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <h3>Completion Rate</h3>
+                    <div class="stat-value" id="completion-rate">0%</div>
+                </div>
+            </div>
+            <div class="progress-chart">
+                <h3>Task Completion Chart</h3>
+                <div class="chart-container">
+                    <div class="chart-bar-container">
+                        <div class="chart-label">To Do</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-fill" id="todo-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="chart-value" id="todo-bar-value">0%</div>
+                    </div>
+                    <div class="chart-bar-container">
+                        <div class="chart-label">In Progress</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-fill" id="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="chart-value" id="progress-bar-value">0%</div>
+                    </div>
+                    <div class="chart-bar-container">
+                        <div class="chart-label">Completed</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-fill" id="completed-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="chart-value" id="completed-bar-value">0%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Page -->
+        <section id="settings-page" class="page">
+            <div class="page-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="settings-container">
+                <div class="settings-group">
+                    <h3>Appearance</h3>
+                    <div class="setting-item">
+                        <label for="theme-select">Theme</label>
+                        <div class="theme-options">
+                            <button class="theme-option" data-theme="light">
+                                <div class="theme-preview light-theme"></div>
+                                <span>Light</span>
+                            </button>
+                            <button class="theme-option" data-theme="dark">
+                                <div class="theme-preview dark-theme"></div>
+                                <span>Dark</span>
+                            </button>
+                            <button class="theme-option" data-theme="purple">
+                                <div class="theme-preview purple-theme"></div>
+                                <span>Purple</span>
+                            </button>
+                            <button class="theme-option" data-theme="teal">
+                                <div class="theme-preview teal-theme"></div>
+                                <span>Teal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h3>Notifications</h3>
+                    <div class="setting-item">
+                        <label for="notification-toggle">Enable Notifications</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="notification-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label for="notification-time">Notification Time (days before deadline)</label>
+                        <select id="notification-time">
+                            <option value="1">1 day</option>
+                            <option value="2">2 days</option>
+                            <option value="3" selected>3 days</option>
+                            <option value="5">5 days</option>
+                            <option value="7">7 days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h3>Data Management</h3>
+                    <div class="setting-item">
+                        <button id="clear-data-btn" class="btn btn-danger hover-lift">Clear All Tasks</button>
+                        <p class="setting-description">This will permanently delete all your tasks and cannot be undone.</p>
+                    </div>
+                    <div class="setting-item">
+                        <button id="export-data-btn" class="btn btn-secondary hover-lift">Export Tasks</button>
+                        <p class="setting-description">Download your tasks as a JSON file.</p>
+                    </div>
+                    <div class="setting-item">
+                        <label for="import-data" class="btn btn-secondary hover-lift">Import Tasks</label>
+                        <input type="file" id="import-data" accept=".json" style="display: none;">
+                        <p class="setting-description">Upload a previously exported tasks file.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact-page" class="page">
+            <div class="page-header">
+                <h2>Contact Us</h2>
+            </div>
+            <div class="contact-container">
+                <form id="contact-form" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                        <div class="error-message" id="name-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone (Optional)</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+237671360235">
+                        <div class="error-message" id="phone-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <div class="error-message" id="message-error"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary hover-lift">
+                        <span class="send-icon"></span>
+                        Send Message
+                    </button>
+                </form>
+                <div id="form-success" class="form-success hidden">
+                    <div class="success-icon"></div>
+                    <h3>Thank You!</h3>
+                    <p>Your message has been sent successfully. We'll get back to you soon.</p>
+                    <button id="send-another-btn" class="btn btn-secondary hover-lift">Send Another Message</button>
+                </div>
+                <div class="social-links">
+                    <a href="https://github.com/Vitalisn4" target="_blank" class="social-link hover-lift">
+                        <div class="github-icon"></div>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/ngam-vitalis" target="_blank" class="social-link hover-lift">
+                        <div class="linkedin-icon"></div>
+                        <span>LinkedIn</span>
+                    </a>
+                    <div class="contact-info">
+                        <h4>Direct Contact</h4>
+                        <p><strong>Email:</strong> ngamvitalisyuh@gmail.com</p>
+                        <p><strong>Phone:</strong> +237671360235</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Kanban Board</p>
-    </footer>
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Task</h3>
+                <button id="close-modal" class="close-btn">
+                    <div class="close-icon"></div>
+                </button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label for="task-title">Task Title</label>
+                    <input type="text" id="task-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">Description</label>
+                    <textarea id="task-description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-due-date">Due Date</label>
+                    <input type="date" id="task-due-date" name="dueDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority" name="priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group" id="progress-group">
+                    <label for="task-progress">Progress</label>
+                    <div class="progress-container">
+                        <input type="range" id="task-progress" name="progress" min="0" max="100" value="0">
+                        <span id="progress-value">0%</span>
+                    </div>
+                </div>
+                <input type="hidden" id="task-id" name="id">
+                <input type="hidden" id="task-status" name="status" value="todo">
+                <div class="form-actions">
+                    <button type="button" id="delete-task-btn" class="btn btn-danger hidden">Delete</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirm-title">Confirm Action</h3>
+                <button id="close-confirm-modal" class="close-btn">
+                    <div class="close-icon"></div>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-action" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-action" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Snooze Modal -->
+    <div id="snooze-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Snooze Notification</h3>
+                <button id="close-snooze-modal" class="close-btn">
+                    <div class="close-icon"></div>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="snooze-message">Task "<span id="snooze-task-title"></span>" is due soon.</p>
+                <div class="form-group">
+                    <label for="snooze-time">Remind me again in:</label>
+                    <select id="snooze-time">
+                        <option value="1">1 hour</option>
+                        <option value="3">3 hours</option>
+                        <option value="24">1 day</option>
+                        <option value="never">Don't remind me again</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="snooze-action" class="btn btn-primary">Snooze</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="notification-toast hidden">
+        <div class="notification-content">
+            <div class="notification-icon"></div>
+            <div class="notification-message">
+                <p id="notification-text">Task is due soon!</p>
+                <p id="notification-task-title" class="notification-task-title"></p>
+            </div>
+        </div>
+        <div class="notification-actions">
+            <button id="view-task-btn" class="btn btn-text">View</button>
+            <button id="snooze-notification-btn" class="btn btn-text">Snooze</button>
+            <button id="close-notification-btn" class="btn btn-icon">
+                <div class="close-icon small"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/email.js"></script>
+    <script src="scripts/form.js"></script>
+    <script src="scripts/main.js"></script>
 </body>
 </html>
-
