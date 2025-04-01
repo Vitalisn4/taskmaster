@@ -1,4 +1,4 @@
-name: Deploy Task Master
+name: Deploy TaskMaster App
 
 on:
   push:
